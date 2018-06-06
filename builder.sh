@@ -3,14 +3,13 @@
 ## $1: target
 ## $2: platform
 ## $3: prefix
-# Support targets: "arm", "armv7-a", "arm-v7n", "arm64-v8a", "i686", "x86_64"
+# Support targets: "armv7-a", "arm-v7n", "arm64-v8a", "i686", "x86_64"
 
 set -e
 set -x
 
 export NDK=/home/rafa/Desktop/m4/ndk
-
-## Support either NDK linux or darwin (mac os)
+ 
 ## Check $NDK exists
 if [ "$NDK" = "" ] || [ ! -d $NDK ]; then
 	echo "NDK variable not set or path to NDK is invalid, exiting..."
@@ -19,9 +18,9 @@ fi
 
 
 export TARGET=$1
-export PLATFORM=$2
+export API_LVL=$2
 export PREFIX=$(pwd)/$3
-FINAL_DIR=$(pwd)/final/$TARGET
+FINAL_DIR=$(pwd)/final/${API_LVL}/${TARGET}
 
 
 sudo apt-get update
@@ -54,162 +53,162 @@ LIB="ffmpeg"
 VERSION=${FFMPEG_VERSION}
 
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://www.ffmpeg.org/releases/${LIB}-${FFMPEG_VERSION}.tar.gz
-    echo "extracting ${LIB}-${VERSION}.tar.gz"
-    tar -zxf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://www.ffmpeg.org/releases/${LIB}-${FFMPEG_VERSION}.tar.gz
+ echo "extracting ${LIB}-${VERSION}.tar.gz"
+ tar -zxf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 LIB="x264"
 VERSION=${LIBX264_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -O "ftp://ftp.videolan.org/pub/videolan/x264/snapshots/x264-$LIBX264_VERSION.tar.bz2"
-    tar -xf ${LIB}-${VERSION}.tar.bz2
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -O "ftp://ftp.videolan.org/pub/videolan/x264/snapshots/x264-$LIBX264_VERSION.tar.bz2"
+ tar -xf ${LIB}-${VERSION}.tar.bz2
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/{$LIB}"
+ echo "Using existing `pwd`/{$LIB}"
 fi
 
 LIB="opus"
 VERSION=${OPUS_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/opus-${OPUS_VERSION}"
+ echo "Using existing `pwd`/opus-${OPUS_VERSION}"
 fi
 
 LIB="fdk-aac"
 VERSION=${FDK_AAC_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO http://downloads.sourceforge.net/opencore-amr/fdk-aac-${FDK_AAC_VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO http://downloads.sourceforge.net/opencore-amr/fdk-aac-${FDK_AAC_VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 LIB="lame"
 LAME_MAJOR="3.100"
 VERSION=${LAME_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO http://downloads.sourceforge.net/project/lame/lame/${LAME_MAJOR}/lame-${LAME_VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
-    curl -L -o ${LIB}-${VERSION}/config.guess "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD"
-    curl -L -o ${LIB}-${VERSION}/config.sub "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD"
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO http://downloads.sourceforge.net/project/lame/lame/${LAME_MAJOR}/lame-${LAME_VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
+ curl -L -o ${LIB}-${VERSION}/config.guess "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD"
+ curl -L -o ${LIB}-${VERSION}/config.sub "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD"
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 LIB="libogg"
 VERSION=${LIBOGG_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO http://downloads.xiph.org/releases/ogg/libogg-${LIBOGG_VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO http://downloads.xiph.org/releases/ogg/libogg-${LIBOGG_VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 LIB="libvorbis"
 VERSION=${LIBVORBIS_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO http://downloads.xiph.org/releases/vorbis/libvorbis-${LIBVORBIS_VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO http://downloads.xiph.org/releases/vorbis/libvorbis-${LIBVORBIS_VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 LIB="freetype"
 VERSION=${LIBFREETYPE_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://download.savannah.gnu.org/releases/freetype/freetype-${LIBFREETYPE_VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://download.savannah.gnu.org/releases/freetype/freetype-${LIBFREETYPE_VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 
 LIB="expat"
 VERSION=${LIBEXPAT_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO http://downloads.sourceforge.net/project/expat/expat/${LIBEXPAT_VERSION}/expat-${LIBEXPAT_VERSION}.tar.bz2
-    tar -xjf ${LIB}-${VERSION}.tar.bz2
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO http://downloads.sourceforge.net/project/expat/expat/${LIBEXPAT_VERSION}/expat-${LIBEXPAT_VERSION}.tar.bz2
+ tar -xjf ${LIB}-${VERSION}.tar.bz2
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 LIB="fontconfig"
 VERSION=${LIBFONTCONFIG_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://www.freedesktop.org/software/fontconfig/release/fontconfig-${LIBFONTCONFIG_VERSION}.tar.gz
-    tar -xzf ${LIB}-${LIBFONTCONFIG_VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://www.freedesktop.org/software/fontconfig/release/fontconfig-${LIBFONTCONFIG_VERSION}.tar.gz
+ tar -xzf ${LIB}-${LIBFONTCONFIG_VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 LIB="libuuid"
 VERSION=${LIBUUID_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://ufpr.dl.sourceforge.net/project/libuuid/libuuid-${LIBUUID_VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://ufpr.dl.sourceforge.net/project/libuuid/libuuid-${LIBUUID_VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
  
  
 LIB="libpng"
 VERSION=${LIBPNG12_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://ufpr.dl.sourceforge.net/project/libpng/libpng12/${VERSION}/libpng-${VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://ufpr.dl.sourceforge.net/project/libpng/libpng12/${VERSION}/libpng-${VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi
 
 
 LIB="zlib"
 VERSION=${ZLIB_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://zlib.net/zlib-${VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://zlib.net/zlib-${VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi 
 
 LIB="openssl"
 VERSION=${LIBOPENSSL_VERSION}
 if [ ! -d ${LIB} ]; then
-    echo "Downloading ${LIB}-${VERSION}"
-    curl -LO https://www.openssl.org/source/openssl-${VERSION}.tar.gz
-    tar -xzf ${LIB}-${VERSION}.tar.gz
+ echo "Downloading ${LIB}-${VERSION}"
+ curl -LO https://www.openssl.org/source/openssl-${VERSION}.tar.gz
+ tar -xzf ${LIB}-${VERSION}.tar.gz
 	mv ${LIB}-${VERSION} ${LIB}
 else
-    echo "Using existing `pwd`/${LIB}"
+ echo "Using existing `pwd`/${LIB}"
 fi 
 
 
@@ -219,7 +218,7 @@ fi
 LIB="rtmpdump"
 VERSION=${LIBTRMP_VERSION}
 if [ ! -d ${LIB} ]; then
-    git clone git://git.ffmpeg.org/rtmpdump
+ git clone git://git.ffmpeg.org/rtmpdump
  
 fi
 
@@ -259,10 +258,10 @@ TOOLCHAIN=${NDK}/toolchain/${ARCH}
 SYSROOT=${TOOLCHAIN}/sysroot
 CROSS_PREFIX=${TOOLCHAIN}/bin/arm-linux-androideabi-
 
-$NDK/build/tools/make-standalone-toolchain.sh --use-llvm  --platform=${PLATFORM} --install-dir=${TOOLCHAIN}  --arch=${ARCH} --stl=libc++ --deprecated-headers  || true
-
+$NDK/build/tools/make-standalone-toolchain.sh --use-llvm --platform=android-${API_LVL} --install-dir=${TOOLCHAIN} --arch=${ARCH} --stl=libc++ || true
 
  
+sed -i.bak "s;#define __ANDROID_API__ __ANDROID_API_FUTURE__;#define __ANDROID_API__ 19;" ${SYSROOT}/usr/include/android/api-level.h
  
  
 
@@ -276,70 +275,70 @@ export LD="${CROSS_PREFIX}ld"
 export NM="${CROSS_PREFIX}nm"
 export RANLIB="${CROSS_PREFIX}ranlib"
 export STRIP="${CROSS_PREFIX}strip"
-export LDFLAGS="-L${PREFIX}/lib -L${TOOLCHAIN}/lib -L${SYSROOT}/usr/lib -fPIE  --sysroot=${SYSROOT} "
-export CFLAGS="${OPTIMIZE_CFLAGS} -I${PREFIX}/include  -I${SYSROOT}/usr/include -fPIE " 
+export LDFLAGS="-L${PREFIX}/lib -L${TOOLCHAIN}/lib -L${SYSROOT}/usr/lib -fPIE --sysroot=${SYSROOT} "
+export CFLAGS="${OPTIMIZE_CFLAGS} -I${PREFIX}/include -I${SYSROOT}/usr/include -fPIE " 
 export CXXFLAGS="${CFLAGS} "
 export CPPFLAGS="${CFLAGS} "
 export PATH="$PATH:$PREFIX/bin:$NDK/build"
 export CROSS_SYSROOT="${SYSROOT}"
-
-  
+export __ANDROID_API__=${API_LVL}
+ 
 
 mkdir -p ${PREFIX}
 mkdir -p ${PREFIX}/lib
 mkdir -p ${PREFIX}/include
 
  
-cp -p  $SYSROOT/usr/lib/libz.a $PREFIX/lib/libz.a
-cp -p  $SYSROOT/usr/include/zlib.h $PREFIX/include/zlib.h
+cp -p $SYSROOT/usr/lib/libz.a $PREFIX/lib/libz.a
+cp -p $SYSROOT/usr/include/zlib.h $PREFIX/include/zlib.h
  
 
 
 
-  
-    pushd x264
-        ./configure \
-            --cross-prefix=$CROSS_PREFIX \
-            --sysroot=$SYSROOT \
-            --host=$HOST \
-            --enable-pic \
-            --enable-static \
-            --disable-shared \
-            --disable-cli \
-            --disable-opencl \
-            --prefix=$PREFIX \
-            $LIBX264_FLAGS
+ 
+ pushd x264
+ ./configure \
+ --cross-prefix=$CROSS_PREFIX \
+ --sysroot=$SYSROOT \
+ --host=$HOST \
+ --enable-pic \
+ --enable-static \
+ --disable-shared \
+ --disable-cli \
+ --disable-opencl \
+ --prefix=$PREFIX \
+ $LIBX264_FLAGS
 			
-        make clean  
-        make -j8  
-        make install 
-    popd
+ make clean 
+ make -j8 
+ make install 
+ popd
 
 
-    # Non-free
-    pushd fdk-aac
-        ./configure \
-            --prefix=$PREFIX \
-            --host=$HOST \
-            --enable-static \
-            --disable-shared \
-            --with-sysroot=$SYSROOT
+ # Non-free
+ pushd fdk-aac
+ ./configure \
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --enable-static \
+ --disable-shared \
+ --with-sysroot=$SYSROOT
 
-        make clean
-        make -j8
-        make install
-    popd
+ make clean
+ make -j8
+ make install
+ popd
 
  
 	
 pushd lame
 ./configure \
-    --prefix=$PREFIX \
-    --host=$HOST \
-    --enable-static \
-    --disable-shared \
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --enable-static \
+ --disable-shared \
 	--disable-frontend \
-    --with-sysroot=$SYSROOT
+ --with-sysroot=$SYSROOT
 make clean
 make -j8 
 make install
@@ -351,11 +350,11 @@ popd
 
 pushd libogg
 ./configure \
-    --prefix=$PREFIX \
-    --host=$HOST \
-    --enable-static \
-    --disable-shared \
-    --with-sysroot=$SYSROOT
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --enable-static \
+ --disable-shared \
+ --with-sysroot=$SYSROOT
 
 make clean
 make -j8 
@@ -366,14 +365,14 @@ popd
 
 pushd libvorbis
 ./configure \
-    --prefix=$PREFIX \
-    --host=$HOST \
-    --enable-static \
-    --disable-shared \
-    --with-sysroot=$SYSROOT \
-    --with-ogg=$PREFIX
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --enable-static \
+ --disable-shared \
+ --with-sysroot=$SYSROOT \
+ --with-ogg=$PREFIX
 make clean
-make  -j8 
+make -j8 
 make install
 popd
 
@@ -381,12 +380,12 @@ popd
 
 pushd opus
 ./configure \
-    --prefix=$PREFIX \
-    --host=$HOST \
-    --enable-static \
-    --disable-shared \
-    --disable-doc \
-    --disable-extra-programs
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --enable-static \
+ --disable-shared \
+ --disable-doc \
+ --disable-extra-programs
 make clean
 make -j8
 make install V=1
@@ -396,10 +395,10 @@ popd
 
 	pushd libpng
 	./configure \
-            --prefix=$PREFIX \
-            --host=$HOST \
+ --prefix=$PREFIX \
+ --host=$HOST \
 			--with-arch=$ARCH\
-            --with-sysroot=$SYSROOT \
+ --with-sysroot=$SYSROOT \
 	 --disable-shared \
 	 --enable-static \
 	 --with-pic 
@@ -412,85 +411,85 @@ popd
  
  
 
-    # required by fontconfig
-    pushd libuuid
-        ./configure \
-            --prefix=$PREFIX \
-            --host=$HOST \
-            --enable-static \
+ # required by fontconfig
+ pushd libuuid
+ ./configure \
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --enable-static \
 			--with-sysroot=$SYSROOT \
-            --disable-shared 
-        
-        make clean
-        make -j8  
-        make install
-    popd
+ --disable-shared 
+ 
+ make clean
+ make -j8 
+ make install
+ popd
 
-    # required by fontconfig
-    pushd expat
-        ./configure \
-            --prefix=$PREFIX \
-            --host=$HOST \
-            --with-pic \
-            --enable-static \
+ # required by fontconfig
+ pushd expat
+ ./configure \
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --with-pic \
+ --enable-static \
 			--with-sysroot=$SYSROOT \
 			--without-docbook \
 			--disable-docs \
 			--without-xmlwf \
-            --disable-shared 
+ --disable-shared 
 
-        make clean 
-        make -j8 
-        make install
-    popd
+ make clean 
+ make -j8 
+ make install
+ popd
 
 
 
 	 pushd freetype
-        ./configure \
-            --prefix=$PREFIX \
-            --host=$HOST \
-            --with-pic \
-            --with-zlib=yes \
-            --enable-static \
+ ./configure \
+ --prefix=$PREFIX \
+ --host=$HOST \
+ --with-pic \
+ --with-zlib=yes \
+ --enable-static \
 			--with-sysroot=$SYSROOT \
 			--without-old-mac-fonts \
 			--without-fsspec \
 			--without-fsref \
 			--without-quickdraw-toolbox \
-			--without-quickdraw-carbon  \
+			--without-quickdraw-carbon \
 			--without-ats \
 			--without-png \
 			--without-bzip2 \
 			--disable-shared 
-        
-        make clean
-        make -j8 
-        make install
-    popd
+ 
+ make clean
+ make -j8 
+ make install
+ popd
  
  
  
-    pushd fontconfig 
-         
-        ./configure  PKG_CONFIG="$(which pkg-config)" PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig" \
-            --prefix=$PREFIX \
-            --host=$HOST \
+ pushd fontconfig 
+ 
+ ./configure PKG_CONFIG="$(which pkg-config)" PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig" \
+ --prefix=$PREFIX \
+ --host=$HOST \
 			--with-arch=$ARCH\
-            --with-sysroot=$SYSROOT \
+ --with-sysroot=$SYSROOT \
 			--with-pic \
-            --disable-libxml2 \
-            --disable-iconv \
-            --enable-static \
-            --disable-shared \
-            --disable-docs \
+ --disable-libxml2 \
+ --disable-iconv \
+ --enable-static \
+ --disable-shared \
+ --disable-docs \
 			--disable-nls \
 			--disable-rpath
  
-        make clean
-        make -j8  
-        make install
-    popd
+ make clean
+ make -j8 
+ make install
+ popd
 	
 
 pushd openssl
@@ -499,24 +498,22 @@ pushd openssl
 
 #-D__ANDROID_API__=N
  ./Configure ${OPENSSL_ARCH} \
-              --prefix=${PREFIX} \
-              --with-zlib-include=${NDK}/sysroot/usr/include \
-              --with-zlib-lib=${SYSROOT}/usr/lib \
-              zlib \
-			  no-hw \
-              no-asm \
-              no-shared \
-              no-unit-test \
-			  -I${TOOLCHAIN} \
-			  -fPIE
+ --prefix=${PREFIX} \
+ --with-zlib-include=${NDK}/sysroot/usr/include \
+ --with-zlib-lib=${SYSROOT}/usr/lib \
+ zlib \
+			 no-hw \
+ no-asm \
+ no-shared \
+ no-unit-test \
+			 -I${TOOLCHAIN} \
+			 -fPIE
 
-	sed -e "s;-mandroid;;g" Makefile > tmp
-	rm Makefile
-	mv tmp Makefile
+	sed -i.bak "s;-mandroid;;g" Makefile 
 	
-    make clean
+ make clean
 	make -j8
-    make install_sw
+ make install_sw
 #make install_ssldirs
 	
 popd
@@ -526,19 +523,19 @@ popd
 
 
  
-  
+ 
  
 
 pushd rtmpdump
 
 pushd librtmp 
-  
+ 
 
 set -e
 make clean
-make SYS=android  prefix=${PREFIX} CROSS_COMPILE=${CROSS_PREFIX} CC=${CROSS_PREFIX}clang  SHARED= 
-make SYS=android  prefix=${PREFIX} CROSS_COMPILE=${CROSS_PREFIX} CC=${CROSS_PREFIX}clang  SHARED= install 
-  
+make SYS=android prefix=${PREFIX} CROSS_COMPILE=${CROSS_PREFIX} CC=${CROSS_PREFIX}clang SHARED= 
+make SYS=android prefix=${PREFIX} CROSS_COMPILE=${CROSS_PREFIX} CC=${CROSS_PREFIX}clang SHARED= install 
+ 
 popd 
 
 popd
@@ -554,116 +551,239 @@ mv ${BADFILE}n ${BADFILE}
 pushd ffmpeg
  
  CROSS_COMPILE_FLAGS="--target-os=linux \
-        --arch=$ARCH \
-        --cross-prefix=$CROSS_PREFIX \
-        --enable-cross-compile \
-        --sysroot=$SYSROOT"
+ --arch=${ARCH} \
+		--cpu=${CPU} \
+ --cross-prefix=${CROSS_PREFIX} \
+ --enable-cross-compile \
+		--cc=${CC} \
+		--cxx=${CXX} \
+ --sysroot=$SYSROOT"
 
 
-   ./configure --prefix=$PREFIX \
-        $CROSS_COMPILE_FLAGS \
-        --pkg-config=$(which pkg-config) \
-        --pkg-config-flags="--static" \
-        --enable-pic \
-        --enable-gpl \
-        --enable-nonfree \
-        \
-        --disable-shared \
-        --disable-static \
-        \
-        --enable-ffmpeg \
-        --disable-ffplay \
-        --disable-ffprobe \
+ ./configure --prefix=$PREFIX \
+ $CROSS_COMPILE_FLAGS \
+ --pkg-config=$(which pkg-config) \
+ --pkg-config-flags="--static" \
+ --enable-pic \
+ --enable-gpl \
+ --enable-nonfree \
+ \
+ --disable-shared \
+ --disable-static \
+ \
+ --enable-ffmpeg \
+ --disable-ffplay \
+ --disable-ffprobe \
 		\
-         --enable-libmp3lame \
-  --enable-libopus \
-  --enable-libvorbis \
-  --enable-libx264 \
-  --enable-libfdk-aac \
-  --enable-bsf=aac_adtstoasc \
-  --enable-librtmp \
-  --enable-zlib  \
-  --enable-libfreetype \
-  --enable-openssl \
-  --enable-libfontconfig \
-         --enable-static\
-  --disable-postproc\
-  --disable-avdevice \
-  --disable-avisynth        \
-  --disable-bzlib          \
-  --disable-coreimage\
-  --disable-pixelutils\
-  --disable-doc            \
-  --disable-indevs\
-  --disable-outdevs\
-  --disable-protocols \
---enable-protocol=librtmp\
---enable-protocol=librtmpe\
---enable-protocol=librtmps\
---enable-protocol=crypto\
---enable-protocol=data\
---enable-protocol=file\
---enable-protocol=librtmpt\
---enable-protocol=librtmpte\
---enable-protocol=tcp\
---enable-protocol=rtp\
---enable-protocol=prompeg\
---enable-protocol=udp\
---enable-protocol=udplite\
---enable-protocol=srtp\
+ --enable-libmp3lame \
+ --enable-libopus \
+ --enable-libvorbis \
+ --enable-libx264 \
+ --enable-libfdk-aac \
+ --enable-bsf=aac_adtstoasc \
+ --enable-librtmp \
+ --enable-zlib \
+ --enable-libfreetype \
+ --enable-openssl \
+ --enable-libfontconfig \
+ --enable-static \
+ --disable-postproc \
+ --disable-avdevice \
+ --disable-avisynth \
+ --disable-bzlib \
+ --disable-coreimage \
+ --disable-pixelutils \
+ --disable-doc \
+ --disable-indevs \
+ --disable-outdevs \
+ --disable-protocols \
+--enable-protocol=librtmp \
+--enable-protocol=librtmpe \
+--enable-protocol=librtmps \
+--enable-protocol=crypto \
+--enable-protocol=data \
+--enable-protocol=file \
+--enable-protocol=librtmpt \
+--enable-protocol=librtmpte \
+--enable-protocol=tcp \
+--enable-protocol=rtp \
+--enable-protocol=prompeg \
+--enable-protocol=udp \
+--enable-protocol=udplite \
+--enable-protocol=srtp \
 --disable-filters \
---enable-filter=abitscope\
---enable-filter=acompressor\
---enable-filter=acontrast\
---enable-filter=acopy\
---enable-filter=acrossfade\
---enable-filter=acrusher\
---enable-filter=atrim\
---enable-filter=adrawgraph\
---enable-filter=astreamselect\
---enable-filter=atadenoise\
---enable-filter=atempo\
---enable-filter=bbox\
---enable-filter=avectorscope\
---enable-filter=avgblur\
---enable-filter=deshake\
---enable-filter=displace\
---enable-filter=drawbox\
---enable-filter=drawgraph\
---enable-filter=drawgrid\
---enable-filter=phase\
---enable-filter=hwmap\
---enable-filter=hwupload\
---enable-filter=pp\
---enable-filter=pixdesctest\
---enable-filter=pixscope\
---enable-filter=interlace\
---enable-filter=interleave\
---enable-filter=join\
---enable-filter=qp\
---enable-filter=random\
---enable-filter=psnr\
---enable-filter=dynaudnorm\
---enable-filter=inflate\
---enable-filter=drawtext\
---enable-filter=silenceremove\
---enable-filter=smartblur\
---enable-filter=smptehdbars\
---enable-filter=pp7\
---enable-filter=pullup\
---enable-filter=split\
---enable-filter=spp\
+--enable-filter=abitscope \
+--enable-filter=acompressor \
+--enable-filter=acontrast \
+--enable-filter=acopy \
+--enable-filter=acrossfade \
+--enable-filter=acrusher \
+--enable-filter=atrim \
+--enable-filter=adrawgraph \
+--enable-filter=astreamselect \
+--enable-filter=atadenoise \
+--enable-filter=atempo \
+--enable-filter=bbox \
+--enable-filter=avectorscope \
+--enable-filter=avgblur \
+--enable-filter=deshake \
+--enable-filter=displace \
+--enable-filter=drawbox \
+--enable-filter=drawgraph \
+--enable-filter=drawgrid \
+--enable-filter=phase \
+--enable-filter=hwmap \
+--enable-filter=hwupload \
+--enable-filter=pp \
+--enable-filter=pixdesctest \
+--enable-filter=pixscope \
+--enable-filter=interlace \
+--enable-filter=interleave \
+--enable-filter=join \
+--enable-filter=qp \
+--enable-filter=random \
+--enable-filter=psnr \
+--enable-filter=dynaudnorm \
+--enable-filter=inflate \
+--enable-filter=drawtext \
+--enable-filter=silenceremove \
+--enable-filter=smartblur \
+--enable-filter=smptehdbars \
+--enable-filter=pp7 \
+--enable-filter=pullup \
+--enable-filter=split \
+--enable-filter=spp \
+  --disable-amf \
+  --disable-audiotoolbox \
+  --disable-cuda-sdk \
+  --disable-cuvid  \
+  --disable-d3d11va \
+  --disable-dxva2    \
+  --disable-ffnvcodec  \
+  --disable-libdrm    \
+  --disable-libmfx    \
+  --disable-libnpp      \
+  --disable-mmal \
+  --disable-nvdec \
+  --disable-nvenc \
+  --disable-omx \
+  --disable-omx-rpi \
+  --disable-rkmpp    \
+  --disable-parsers \
+--enable-parser=aac \
+--enable-parser=aac_latm \
+--enable-parser=ac3 \
+--enable-parser=bmp \
+--enable-parser=cavsvideo \
+--enable-parser=cook \
+--enable-parser=dirac \
+--enable-parser=flac \
+--enable-parser=gsm \
+--enable-parser=h261 \
+--enable-parser=h263 \
+--enable-parser=h264 \
+--enable-parser=hevc \
+--enable-parser=mjpeg \
+--enable-parser=pnm \
+--enable-parser=mpeg4video \
+--enable-parser=mpegaudio \
+--enable-parser=mpegvideo \
+--enable-parser=opus \
+--enable-parser=vp3 \
+--enable-parser=vorbis \
+--enable-parser=vp8 \
+--enable-parser=vp9 \
+--enable-parser=vc1 \
+--enable-parser=xma \
+--enable-parser=png \
+--enable-parser=rv30 \
+--enable-parser=rv40 \
+--disable-muxers \
+--enable-muxer=ac3 \
+--enable-muxer=adts \
+--enable-muxer=aiff \
+--enable-muxer=amr \
+--enable-muxer=apng \
+--enable-muxer=ass \
+--enable-muxer=ast \
+--enable-muxer=au \
+--enable-muxer=avi \
+--enable-muxer=avm2 \
+--enable-muxer=bit \
+--enable-muxer=codec2 \
+--enable-muxer=codec2raw \
+--enable-muxer=crc \
+--enable-muxer=dash \
+--enable-muxer=data \
+--enable-muxer=dirac \
+--enable-muxer=null \
+--enable-muxer=gxf \
+--enable-muxer=gif \
+--enable-muxer=h261 \
+--enable-muxer=h263 \
+--enable-muxer=h264 \
+--enable-muxer=hash \
+--enable-muxer=hevc \
+--enable-muxer=eac3 \
+--enable-muxer=f4v \
+--enable-muxer=ffmetadata \
+--enable-muxer=fifo \
+--enable-muxer=fifo_test \
+--enable-muxer=flac \
+--enable-muxer=flv \
+--enable-muxer=framecrc \
+--enable-muxer=framehash \
+--enable-muxer=framemd5 \
+--enable-muxer=gsm \
+--enable-muxer=hls \
+--enable-muxer=ico \
+--enable-muxer=mpeg2vob \
+--enable-muxer=image2 \
+--enable-muxer=image2pipe \
+--enable-muxer=ipod \
+--enable-muxer=mjpeg \
+--enable-muxer=ismv \
+--enable-muxer=latm \
+--enable-muxer=m4v \
+--enable-muxer=matroska \
+--enable-muxer=mkvtimestamp_v2 \
+--enable-muxer=matroska_audio \
+--enable-muxer=mmf \
+--enable-muxer=mov \
+--enable-muxer=mp2 \
+--enable-muxer=mp3 \
+--enable-muxer=mp4 \
+--enable-muxer=mpeg1system \
+--enable-muxer=mpeg1vcd \
+--enable-muxer=mpjpeg \
+--enable-muxer=ogg \
+--enable-muxer=opus \
+--enable-muxer=pcm_alaw \
+--enable-muxer=pcm_f32be \
+--enable-muxer=pcm_f32le \
+--enable-muxer=pcm_f64be \
+--enable-muxer=pcm_f64le \
+--enable-muxer=pcm_mulaw \
+--enable-muxer=pcm_s16be \
+--enable-muxer=pcm_s16le \
+--enable-muxer=pcm_s24be \
+--enable-muxer=pcm_s24le \
+--enable-muxer=mpeg1video \
+--enable-muxer=mpeg2dvd \
+--enable-muxer=mpeg2svcd \
+--enable-muxer=mpeg2video \
+--enable-muxer=pcm_u16le \
+--enable-muxer=mpegts \
 
 
-
-	   
+	 
 	
 make clean
-make  
-make install
+make 
+make install V=1
 
-mkdir -p $DESTINATION_FOLDER/
-cp $PREFIX/bin/ffmpeg $DESTINATION_FOLDER/
+mkdir -p ${FINAL_DIR}/
+cp $PREFIX/bin/ffmpeg ${FINAL_DIR}/
 
 popd
 
@@ -674,74 +794,74 @@ mv ${BADFILE}.bak ${BADFILE}
 
 
 if [ $TARGET == 'arm-v7n' ]; then
-    #arm v7n
-    CPU=armv7-a
-    ARCH=arm
-    HOST=arm-linux-androideabi
-    OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
-    OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=neon -marm -mtune=cortex-a8 -march=$CPU -Os -O3"
-    ADDITIONAL_CONFIGURE_FLAG="--enable-neon "
-    LIBX264_FLAGS=
+ #arm v7n
+ CPU=armv7-a
+ ARCH=arm
+ HOST=arm-linux-androideabi
+ OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
+ OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=neon -marm -mtune=cortex-a8 -march=$CPU -Os -O3"
+ ADDITIONAL_CONFIGURE_FLAG="--enable-neon "
+ LIBX264_FLAGS=
  
 	build_one
 elif [ $TARGET == 'arm64-v8a' ]; then
-    #arm64-v8a
-    CPU=armv8-a
-    ARCH=arm64
-    OPENSSL_ARCH="linux-x86_64 shared no-ssl2 no-ssl3 no-hw"
+ #arm64-v8a
+ CPU=armv8-a
+ ARCH=arm64
+ OPENSSL_ARCH="linux-x86_64 shared no-ssl2 no-ssl3 no-hw"
 	HOST=aarch64-linux-android
-    OPTIMIZE_CFLAGS="-march=$CPU -Os -O3"
-    ADDITIONAL_CONFIGURE_FLAG=
-    LIBX264_FLAGS=
+ OPTIMIZE_CFLAGS="-march=$CPU -Os -O3"
+ ADDITIONAL_CONFIGURE_FLAG=
+ LIBX264_FLAGS=
  
 	build_one
 elif [ $TARGET == 'x86_64' ]; then
-    #x86_64
-    CPU=x86-64
-    ARCH=x86_64
+ #x86_64
+ CPU=x86-64
+ ARCH=x86_64
 OPENSSL_ARCH="linux-x86_64 shared no-ssl2 no-ssl3 no-hw"
 	HOST=x86_64-linux-android
-    OPTIMIZE_CFLAGS="-fomit-frame-pointer -march=$CPU -Os -O3"
-    ADDITIONAL_CONFIGURE_FLAG=
-    LIBX264_FLAGS=
+ OPTIMIZE_CFLAGS="-fomit-frame-pointer -march=$CPU -Os -O3"
+ ADDITIONAL_CONFIGURE_FLAG=
+ LIBX264_FLAGS=
  
 	build_one
 elif [ $TARGET == 'i686' ]; then
-    #x86
-    CPU=i686
-    ARCH=i686
-    OPTIMIZE_CFLAGS="-fomit-frame-pointer -march=$CPU -Os -O3"
-    HOST=i686-linux-android
+ #x86
+ CPU=i686
+ ARCH=i686
+ OPTIMIZE_CFLAGS="-fomit-frame-pointer -march=$CPU -Os -O3"
+ HOST=i686-linux-android
 OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
 	# disable asm to fix 
-    ADDITIONAL_CONFIGURE_FLAG='--disable-asm' 
-    LIBX264_FLAGS="--disable-asm"
+ ADDITIONAL_CONFIGURE_FLAG='--disable-asm' 
+ LIBX264_FLAGS="--disable-asm"
  
 	build_one
 elif [ $TARGET == 'armv7-a' ]; then
-    # armv7-a
-    CPU=armv7-a
-    ARCH=arm
+ # armv7-a
+ CPU=armv7-a
+ ARCH=arm
 OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
 	HOST=arm-linux-androideabi
-    OPTIMIZE_CFLAGS="-mfloat-abi=softfp -marm -march=$CPU -Os -O3 "
-    ADDITIONAL_CONFIGURE_FLAG=
-    LIBX264_FLAGS=
+ OPTIMIZE_CFLAGS="-mfloat-abi=softfp -marm -march=$CPU -Os -O3 "
+ ADDITIONAL_CONFIGURE_FLAG=
+ LIBX264_FLAGS=
  
-    build_one
+ build_one
 elif [ $TARGET == 'arm' ]; then
-    #arm
-    CPU=armv5te
-    ARCH=arm
+ #arm
+ CPU=armv5te
+ ARCH=arm
 OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
 	HOST=arm-linux-androideabi
-    OPTIMIZE_CFLAGS="-march=$CPU -Os -O3 "
-    ADDITIONAL_CONFIGURE_FLAG=
-    LIBX264_FLAGS="--disable-asm"
+ OPTIMIZE_CFLAGS="-marm -march=$CPU -Os -O3 "
+ ADDITIONAL_CONFIGURE_FLAG=
+ LIBX264_FLAGS="--disable-asm"
  
-    build_one
+ build_one
  
 else
-    echo "Unknown target: $TARGET"
-    exit 1
+ echo "Unknown target: $TARGET"
+ exit 1
 fi
