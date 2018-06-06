@@ -1,4 +1,4 @@
-# ffmpeg-for-android-for-dummies
+# FFmpeg for android for dummies
 This repository intent to be an ultimate guide for anyone who needs to build ffmpeg for android. 
 ## Motivation
  
@@ -30,11 +30,9 @@ You may add or remove dependencies according to your needs
 
 ## Running
 You shall run the script with the command: 
-```./builder.sh ARCH TARGET_PLATFORM TEMP_DIR```
+```./builder.sh ARCH API_LVL TEMP_DIR```
 
-Supported *ARCH*:  "arm", "armv7-a", "arm-v7n", "arm64-v8a", "i686", "x86_64"
-
-*TARGET_PLATFORM* must be in format ```android-X``` where *X* is the api level
+Supported ```ARCH```:  "arm", "armv7-a", "arm-v7n", "arm64-v8a", "i686", "x86_64" ```TARGET_PLATFORM``` must be the numeric android api level you are targeting 
 
 The *ffmpeg* binary should in folder ```final/$ARCH/ffmpeg``` after build succeed.
 
