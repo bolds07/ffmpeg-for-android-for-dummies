@@ -3,7 +3,7 @@
 ## $1: target
 ## $2: platform
 ## $3: prefix
-# Support targets: "armv7-a", "arm-v7n", "arm64-v8a", "i686", "x86_64"
+# Support targets: "arm" "armv7-a", "arm-v7n", "arm64-v8a", "x86", "x86_64"
 
 set -e
 set -x
@@ -256,14 +256,20 @@ function build_one
 
 TOOLCHAIN=${NDK}/toolchain/${ARCH}
 SYSROOT=${TOOLCHAIN}/sysroot
-CROSS_PREFIX=${TOOLCHAIN}/bin/arm-linux-androideabi-
+CROSS_PREFIX=${TOOLCHAIN}/bin/${ARCH}-linux-android${EABI}-
 
+if [ "$ARCH" = "i686" ]; then
+$NDK/build/tools/make-standalone-toolchain.sh --use-llvm --platform=android-${API_LVL} --install-dir=${TOOLCHAIN} --arch=x86 --stl=libc++ || true
+else
 $NDK/build/tools/make-standalone-toolchain.sh --use-llvm --platform=android-${API_LVL} --install-dir=${TOOLCHAIN} --arch=${ARCH} --stl=libc++ || true
-
+fi
  
 sed -i.bak "s;#define __ANDROID_API__ __ANDROID_API_FUTURE__;#define __ANDROID_API__ ${API_LVL};" ${SYSROOT}/usr/include/android/api-level.h
  
- 
+if [ "${ARCH}" = "x86_64" ]; then
+rm -R ${SYSROOT}/usr/lib
+ln -s ${SYSROOT}/usr/lib64 ${SYSROOT}/usr/lib
+fi
 
 export PKG_CONFIG="$(which pkg-config)"
 export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig"
@@ -362,8 +368,9 @@ make install
 popd
 
 
-
 pushd libvorbis
+sed -ia.bak "s;-mno-ieee-fp;;g" configure
+
 ./configure \
  --prefix=$PREFIX \
  --host=$HOST \
@@ -372,6 +379,8 @@ pushd libvorbis
  --with-sysroot=$SYSROOT \
  --with-ogg=$PREFIX
 make clean
+
+
 make -j8 
 make install
 popd
@@ -543,10 +552,17 @@ popd
 
 
 #the file /home/rafa/Desktop/m4/ndk/toolchain/arm/sysroot/usr/include/asm-generic/termbits.h has a definition also defined on lavcoded/aac.c, so we need to comment it otherwise ffmpeg wont compile
-BADFILE=/home/rafa/Desktop/m4/ndk/toolchain/arm/sysroot/usr/include/asm-generic/termbits.h
+BADFILE=${SYSROOT}/usr/include/asm-generic/termbits.h
 sed -e "s;#define B0 0000000;//#define B0 0000000;" ${BADFILE} > ${BADFILE}n
 mv ${BADFILE} ${BADFILE}.bak
 mv ${BADFILE}n ${BADFILE}
+
+#due https://github.com/android-ndk/ndk/issues/693
+BUG_FIX=
+
+if [ "${ARCH}" = "i686" ]; then
+BUG_FIX="-extra-cflags=-mno-stackrealign"
+fi
 
 pushd ffmpeg
  
@@ -557,6 +573,7 @@ pushd ffmpeg
  --enable-cross-compile \
 		--cc=${CC} \
 		--cxx=${CXX} \
+		${BUG_FIX} \
  --sysroot=$SYSROOT"
 
 
@@ -587,11 +604,11 @@ pushd ffmpeg
  --enable-openssl \
  --enable-libfontconfig \
  --enable-static 
-
+ 
 	 
 	
 make clean
-make 
+make -j8
 make install V=1
 
 mkdir -p ${FINAL_DIR}/
@@ -614,7 +631,7 @@ if [ $TARGET == 'arm-v7n' ]; then
  OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=neon -marm -mtune=cortex-a8 -march=$CPU -Os -O3"
  ADDITIONAL_CONFIGURE_FLAG="--enable-neon "
  LIBX264_FLAGS=
- 
+ EABI=eabi
 	build_one
 elif [ $TARGET == 'arm64-v8a' ]; then
  #arm64-v8a
@@ -625,7 +642,7 @@ elif [ $TARGET == 'arm64-v8a' ]; then
  OPTIMIZE_CFLAGS="-march=$CPU -Os -O3"
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS=
- 
+ EABI=eabi
 	build_one
 elif [ $TARGET == 'x86_64' ]; then
  #x86_64
@@ -636,9 +653,9 @@ OPENSSL_ARCH="linux-x86_64 shared no-ssl2 no-ssl3 no-hw"
  OPTIMIZE_CFLAGS="-fomit-frame-pointer -march=$CPU -Os -O3"
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS=
- 
+ EABI= 
 	build_one
-elif [ $TARGET == 'i686' ]; then
+elif [ $TARGET == 'x86' ]; then
  #x86
  CPU=i686
  ARCH=i686
@@ -648,7 +665,7 @@ OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
 	# disable asm to fix 
  ADDITIONAL_CONFIGURE_FLAG='--disable-asm' 
  LIBX264_FLAGS="--disable-asm"
- 
+ EABI= 
 	build_one
 elif [ $TARGET == 'armv7-a' ]; then
  # armv7-a
@@ -659,7 +676,7 @@ OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
  OPTIMIZE_CFLAGS="-mfloat-abi=softfp -marm -march=$CPU -Os -O3 "
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS=
- 
+ EABI=eabi
  build_one
 elif [ $TARGET == 'arm' ]; then
  #arm
@@ -670,7 +687,7 @@ OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
  OPTIMIZE_CFLAGS="-marm -march=$CPU -Os -O3 "
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS="--disable-asm"
- 
+ EABI=eabi
  build_one
  
 else
