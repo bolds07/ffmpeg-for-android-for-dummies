@@ -256,7 +256,7 @@ function build_one
 
 TOOLCHAIN=${NDK}/toolchain/${ARCH}
 SYSROOT=${TOOLCHAIN}/sysroot
-CROSS_PREFIX=${TOOLCHAIN}/bin/${ARCH}-linux-android${EABI}-
+CROSS_PREFIX=${TOOLCHAIN}/bin/${HOST}-
 
 if [ "$ARCH" = "i686" ]; then
 $NDK/build/tools/make-standalone-toolchain.sh --use-llvm --platform=android-${API_LVL} --install-dir=${TOOLCHAIN} --arch=x86 --stl=libc++ || true
@@ -557,12 +557,8 @@ sed -e "s;#define B0 0000000;//#define B0 0000000;" ${BADFILE} > ${BADFILE}n
 mv ${BADFILE} ${BADFILE}.bak
 mv ${BADFILE}n ${BADFILE}
 
-#due https://github.com/android-ndk/ndk/issues/693
-BUG_FIX=
 
-if [ "${ARCH}" = "i686" ]; then
-BUG_FIX="-extra-cflags=-mno-stackrealign"
-fi
+ 
 
 pushd ffmpeg
  
@@ -573,8 +569,7 @@ pushd ffmpeg
  --enable-cross-compile \
 		--cc=${CC} \
 		--cxx=${CXX} \
-		${BUG_FIX} \
- --sysroot=$SYSROOT"
+		--sysroot=$SYSROOT"
 
 
  ./configure --prefix=$PREFIX \
@@ -603,8 +598,8 @@ pushd ffmpeg
  --enable-libfreetype \
  --enable-openssl \
  --enable-libfontconfig \
- --enable-static 
- 
+ --enable-static \
+ ${ADDITIONAL_FFMPEG_CONFIGURATION}
 	 
 	
 make clean
@@ -631,7 +626,7 @@ if [ $TARGET == 'arm-v7n' ]; then
  OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=neon -marm -mtune=cortex-a8 -march=$CPU -Os -O3"
  ADDITIONAL_CONFIGURE_FLAG="--enable-neon "
  LIBX264_FLAGS=
- EABI=eabi
+   ADDITIONAL_FFMPEG_CONFIGURATION=
 	build_one
 elif [ $TARGET == 'arm64-v8a' ]; then
  #arm64-v8a
@@ -642,7 +637,7 @@ elif [ $TARGET == 'arm64-v8a' ]; then
  OPTIMIZE_CFLAGS="-march=$CPU -Os -O3"
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS=
- EABI=eabi
+  ADDITIONAL_FFMPEG_CONFIGURATION=--disable-devices
 	build_one
 elif [ $TARGET == 'x86_64' ]; then
  #x86_64
@@ -653,7 +648,7 @@ OPENSSL_ARCH="linux-x86_64 shared no-ssl2 no-ssl3 no-hw"
  OPTIMIZE_CFLAGS="-fomit-frame-pointer -march=$CPU -Os -O3"
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS=
- EABI= 
+  ADDITIONAL_FFMPEG_CONFIGURATION=
 	build_one
 elif [ $TARGET == 'x86' ]; then
  #x86
@@ -665,7 +660,8 @@ OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
 	# disable asm to fix 
  ADDITIONAL_CONFIGURE_FLAG='--disable-asm' 
  LIBX264_FLAGS="--disable-asm"
- EABI= 
+ #due https://github.com/android-ndk/ndk/issues/693
+   ADDITIONAL_FFMPEG_CONFIGURATION=-extra-cflags=-mno-stackrealign
 	build_one
 elif [ $TARGET == 'armv7-a' ]; then
  # armv7-a
@@ -676,7 +672,7 @@ OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
  OPTIMIZE_CFLAGS="-mfloat-abi=softfp -marm -march=$CPU -Os -O3 "
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS=
- EABI=eabi
+ ADDITIONAL_FFMPEG_CONFIGURATION=  
  build_one
 elif [ $TARGET == 'arm' ]; then
  #arm
@@ -687,7 +683,7 @@ OPENSSL_ARCH="android shared no-ssl2 no-ssl3 no-hw "
  OPTIMIZE_CFLAGS="-marm -march=$CPU -Os -O3 "
  ADDITIONAL_CONFIGURE_FLAG=
  LIBX264_FLAGS="--disable-asm"
- EABI=eabi
+ ADDITIONAL_FFMPEG_CONFIGURATION=
  build_one
  
 else
