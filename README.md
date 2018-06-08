@@ -32,7 +32,12 @@ You may add or remove dependencies according to your needs
 You shall run the script with the command: 
 ```./builder.sh ARCH API_LVL TEMP_DIR```
 
-Supported ```ARCH```:  "arm", "armv7-a", "arm-v7n", "arm64-v8a", "i686", "x86_64" ```TARGET_PLATFORM``` must be the numeric android api level you are targeting 
+Supported ```ARCH```:  "arm", "armv7-a", "armv7-n", "armv8-a", "x86", "x86_64" ```TARGET_PLATFORM``` must be the numeric android api level you are targeting 
+
+### Ex
+```./builder.sh arm 21 temp```
+
+```TEMP_DIR``` will be created case it doesn't exist, if folder already exists its content may be replaced
 
 The *ffmpeg* binary should in folder ```final/$ARCH/ffmpeg``` after build succeed.
 
