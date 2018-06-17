@@ -606,16 +606,15 @@ pushd ffmpeg
  --enable-libvorbis \
  --enable-libx264 \
  --enable-libfdk-aac \
- --enable-bsf=aac_adtstoasc \
  --enable-librtmp \
  --enable-zlib \
  --enable-libfreetype \
  --enable-openssl \
  --enable-libfontconfig \
  --disable-protocols \
- --enable-protocol="librtmp,librtmpe,librtmps,data,file,librtmpt,librtmpte,tcp,rtp,prompeg,udp,udplite,srtp" \
+ --enable-protocol="crypto,librtmp,librtmpe,librtmps,data,file,librtmpt,librtmpte,tcp,rtp,prompeg,udp,udplite,srtp" \
 --disable-filters \
- --enable-filter="abitscope,acompressor,acontrast,acopy,acrossfade,acrusher,atrim,astreamselect,atadenoise,atempo,bbox,avectorscope,avgblur,deshake,displace,drawbox,hwmap,hwupload,pp,pixdesctest,pixscope,interlace,interleave,join,qp,random,psnr,inflate,drawtext,smptehdbars,pp7,pullup,split,spp" \
+ --enable-filter="transpose,abitscope,acompressor,acontrast,acopy,acrossfade,acrusher,atrim,astreamselect,atadenoise,atempo,bbox,avectorscope,avgblur,deshake,displace,drawbox,hwmap,hwupload,pp,pixdesctest,pixscope,interlace,interleave,join,qp,random,psnr,inflate,drawtext,smptehdbars,pp7,pullup,split,spp" \
  --disable-parsers \
  --enable-parser="aac,aac_latm,ac3,bmp,cavsvideo,cook,dirac,flac,gsm,h261,h263,h264,hevc,mjpeg,pnm,mpeg4video,mpegaudio,mpegvideo,opus,vp3,vorbis,vp8,vp9,vc1,xma,png,rv30,rv40" \
  --disable-muxers \
@@ -626,9 +625,10 @@ pushd ffmpeg
  --enable-encoder="ac3,ac3_fixed,alac,amv,apng,avui,ayuv,bmp,gif,h261,h263,h263_v4l2m2m,h263p,h264_v4l2m2m,huffyuv,jpeg2000,jpegls,mpeg4_v4l2m2m,msmpeg4v2,msmpeg4v3,msvideo1,opus,pcm_alaw,pcm_f32be,pcm_f32le,pcm_s8,pcm_s8_planar,pcm_u16be,pcm_u16le,pcm_u24be,pcm_u24le,pcm_u32be,pcm_u32le,pcm_u8,pcm_mulaw,pcm_s16be,pcm_s16be_planar,pcm_s16le,pcm_s16le_planar,r10k,pcm_s24daud,pcm_s24le,pcm_s24le_planar,pcm_s32be,rv10,pcm_s64be,r210,ra_144,text,tiff,truehd,tta,v308,v408,v410,vc2,vorbis,rawvideo,rv20,wavpack,webvtt,wmav1,wmav2,pcm_s32le,pcm_s32le_planar,mpeg2video,pcm_s64le,libfdk_aac,libmp3lame,libopus,pcm_f64be,pcm_f64le,eac3,flashsv,mpeg4,flv,flac,movtext,mp2,mp2fixed,mpeg1video,libx264,libx264rgb,ljpeg,magicyuv,mjpeg,pcm_s24be,libvorbis,pgmyuv,png,vp8_v4l2m2m,wmv2,wrapped_avframe,xwd,wmv1,yuv4,y41p,zlib" \
  --disable-decoders \
  --enable-decoder="aac,aac_fixed,aac_latm,aasc,ac3,ac3_fixed,adpcm_4xm,adpcm_adx,adpcm_afc,adpcm_aica,adpcm_ct,adpcm_dtk,adpcm_ea,adpcm_ea_maxis_xa,adpcm_ea_r1,adpcm_ea_r2,adpcm_ea_r3,adpcm_ea_xas,adpcm_g722,adpcm_g726,adpcm_g726le,adpcm_ima_amv,adpcm_ima_apc,adpcm_ima_dat4,adpcm_ima_dk3,adpcm_ima_dk4,adpcm_ima_ea_eacs,adpcm_ima_ea_sead,adpcm_ima_iss,adpcm_ima_oki,adpcm_ima_qt,adpcm_ima_rad,adpcm_ima_smjpeg,adpcm_ima_wav,adpcm_ima_ws,adpcm_ms,adpcm_mtaf,adpcm_psx,adpcm_sbpro_2,adpcm_sbpro_3,adpcm_sbpro_4,adpcm_swf,adpcm_thp,adpcm_thp_le,adpcm_vima,adpcm_xa,adpcm_yamaha,alac,alias_pix,amrnb,amrwb,amv,ansi,apng,vp9_v4l2m2m,vplayer,wavpack,webp,webvtt,wmalossless,atrac3p,atrac3pal,cdgraphics,cdxl,avui,ayuv,bmp,ffvhuff,ffwavesynth,fic,fits,flv,tta,vb,vc1_v4l2m2m,vorbis,vp6,vp6f,vp7,yuv4,zero12v,zerocodec,zlib,smvjpeg,text,theora,thp,vp8,vp3,vp5,pcm_s24le,pcm_s24le_planar,tiff,truehd,vc1,rv10,rv40,pcm_s16le_planar,pcm_s32be,pcm_s32le_planar,pcm_s8,pcm_u24be,pcx,psd,qdraw,qpeg,r10k,r210,ra_144,rv30,vp8_v4l2m2m,vp9,y41p,evrc,flac,flashsv,flashsv2,flic,gif,fourxm,h261,h263,gsm,gsm_ms,h263p,h264_v4l2m2m,h263_v4l2m2m,h263i,h264,wmapro,wmav1,wmav2,wmavoice,wmv1,wmv2,wmv3,eac3,eacmv,eamad,magicyuv,xbin,xma1,xma2,pcm_u24le,pcm_u32be,pcm_u16be,pcm_u8,pcm_s32le,pcm_s24daud,pcm_s64be,pcm_s64le,mp2float,fmvc,mp3adu,mp3float,mp3on4,mp3on4float,mpeg1video,pcm_s24be,mimic,mjpeg,mjpegb,mpeg1_v4l2m2m,mp1,movtext,mp1float,mp2,pcm_u16le,mp3,pcm_s8_planar,mp3adufloat,mpc7,mpc8,pgmyuv,mpeg2_v4l2m2m,mpeg2video,pcm_zork,pcm_u32le,msa1,mpeg4_v4l2m2m,msmpeg4v1,hevc,huffyuv,msmpeg4v2,msmpeg4v3,msrle,mpeg4,png,mpegvideo,mpl2,ra_288,rawvideo,realtext,jpeg2000,jpegls,libfdk_aac,libopus,libvorbis,paf_video,opus,paf_audio,rv20,wmv3image,mlp" \
+ --enable-bsf="aac_adtstoasc,h264_metadata,h264_mp4toannexb,mpeg4_unpack_bframes,h264_redundant_pps" \
  ${ADDITIONAL_FFMPEG_CONFIGURATION}
 
- 
+
 make clean
 make -j8
 make install V=1
@@ -638,7 +638,9 @@ cp $PREFIX/bin/ffmpeg ${FINAL_DIR}/
 
 popd
 
-zip ${FINAL_DIR}/${TARGET} ${FINAL_DIR}/ffmpeg
+cd ${FINAL_DIR}
+zip  ${TARGET}.zip ffmpeg
+
 
 rm ${BADFILE}
 mv ${BADFILE}.bak ${BADFILE}
